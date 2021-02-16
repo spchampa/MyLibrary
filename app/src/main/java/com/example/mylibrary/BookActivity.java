@@ -4,11 +4,15 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+
+import java.util.ArrayList;
 
 public class BookActivity extends AppCompatActivity {
 
@@ -35,10 +39,46 @@ public class BookActivity extends AppCompatActivity {
                 Book incomingBook = Utils.getInstance().getBookById(bookId);
                 if (null != incomingBook) {
                     setData(incomingBook);
+
+                    handleAlreadyRead(incomingBook);
                 }
             }
         }
     }
+
+
+    /**
+     * Enable and Disable the already read button in the book activity.
+     * Add the book to the already read book array list.
+     * @param book
+     */
+    private void handleAlreadyRead(Book book) {
+        ArrayList<Book> alreadyReadBooks = Utils.getInstance().getAlreadyReadBooks();
+        boolean existsInAlreadyReadBooks = false;
+
+        for (Book b: alreadyReadBooks) {
+            if (b.getId() == book.getId()) {
+                existsInAlreadyReadBooks = true;
+            }
+        }
+
+        if (existsInAlreadyReadBooks) {
+            btnAddToAlreadyRead.setEnabled(false);
+        } else {
+            btnAddToAlreadyRead.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (Utils.getInstance().addToAlreadyRead(book)) {
+                        Toast.makeText(BookActivity.this, "Book Added", Toast.LENGTH_SHORT).show();
+                        //TODO: Navigate the user.
+                    } else {
+                        Toast.makeText(BookActivity.this, "Something Wrong Happened!", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+        }
+    }
+
 
     private void setData(Book book){
         txtBookName.setText(book.getName());
