@@ -1,6 +1,7 @@
 package com.example.mylibrary;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.transition.TransitionManager;
@@ -78,13 +80,26 @@ public class BookRecViewAdapter extends RecyclerView.Adapter<BookRecViewAdapter.
                 holder.btnDelete.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (Utils.getInstance().removeFromAlreadyRead(books.get(position))) {
-                            Toast.makeText(mContext, "Book Removed.", Toast.LENGTH_SHORT).show();
-                            notifyDataSetChanged();
-                        }
-                        else {
-                            Toast.makeText(mContext, "Something Wrong Happened.", Toast.LENGTH_SHORT).show();
-                        }
+                        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+                        builder.setMessage("Are you sure you want to delete " + books.get(position).getName() + "?");
+                        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                if (Utils.getInstance().removeFromAlreadyRead(books.get(position))) {
+                                    Toast.makeText(mContext, "Book Removed", Toast.LENGTH_SHORT).show();
+                                    notifyDataSetChanged();
+                                }
+                            }
+                        });
+                        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                            }
+                        });
+
+                        builder.create().show();
+
                     }
                 });
             }
