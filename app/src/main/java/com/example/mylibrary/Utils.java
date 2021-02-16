@@ -99,4 +99,12 @@ public class Utils {
     public boolean addToCurrentlyReading(Book book){
         return currentlyReadingBooks.add(book);
     }
+
+    public boolean removeFromAlreadyRead(Book book){
+        return alreadyReadBooks.remove(book);
+    }
+
+
+
+
 }

@@ -27,9 +27,11 @@ public class BookRecViewAdapter extends RecyclerView.Adapter<BookRecViewAdapter.
 
     private ArrayList<Book> books = new ArrayList<>();
     private Context mContext;
+    private String parentActivity;
 
-    public BookRecViewAdapter(Context mContext) {
+    public BookRecViewAdapter(Context mContext, String parentActivity) {
         this.mContext = mContext;
+        this.parentActivity = parentActivity;
     }
 
     @NonNull
@@ -67,6 +69,37 @@ public class BookRecViewAdapter extends RecyclerView.Adapter<BookRecViewAdapter.
             TransitionManager.beginDelayedTransition(holder.parent);
             holder.expandedRelLayout.setVisibility(View.VISIBLE);
             holder.downArrow.setVisibility(View.GONE);
+
+            if (parentActivity.equals("allBooks")) {
+                holder.btnDelete.setVisibility(View.GONE);
+            }
+            else if (parentActivity.equals("alreadyRead")){
+                holder.btnDelete.setVisibility(View.VISIBLE);
+                holder.btnDelete.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (Utils.getInstance().removeFromAlreadyRead(books.get(position))) {
+                            Toast.makeText(mContext, "Book Removed.", Toast.LENGTH_SHORT).show();
+                            notifyDataSetChanged();
+                        }
+                        else {
+                            Toast.makeText(mContext, "Something Wrong Happened.", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+            }
+            else if (parentActivity.equals("wantToRead")) {
+
+            }
+            else if (parentActivity.equals("currentlyReading")) {
+
+            } else {
+
+            }
+
+
+
+
         } else {
             TransitionManager.beginDelayedTransition(holder.parent);
             holder.expandedRelLayout.setVisibility(View.GONE);
@@ -92,7 +125,7 @@ public class BookRecViewAdapter extends RecyclerView.Adapter<BookRecViewAdapter.
 
         private ImageView downArrow, upArrow;
         private RelativeLayout expandedRelLayout;
-        private TextView txtAuthor, txtDescription;
+        private TextView txtAuthor, txtDescription, btnDelete;
 
 
 
@@ -108,6 +141,8 @@ public class BookRecViewAdapter extends RecyclerView.Adapter<BookRecViewAdapter.
             expandedRelLayout = itemView.findViewById(R.id.expandedRelLayout);
             txtAuthor = itemView.findViewById(R.id.txtAuthor);
             txtDescription = itemView.findViewById(R.id.txtShortDesc);
+
+            btnDelete = itemView.findViewById(R.id.btnDelete);
 
             downArrow.setOnClickListener(new View.OnClickListener() {
                 @Override
