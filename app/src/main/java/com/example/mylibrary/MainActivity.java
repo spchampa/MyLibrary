@@ -27,6 +27,17 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        btnAlreadyRead.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, AlreadyReadBookActivity.class);
+                startActivity(intent);
+            }
+        });
+
+
+        Utils.getInstance(); // just to initialize the singleton.
     }
 
     private void initViews() {
