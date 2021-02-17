@@ -87,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        Utils.getInstance(); // just to initialize the singleton.
+        Utils.getInstance(this); // just to initialize the singleton.
     }
 
     private void initViews() {
